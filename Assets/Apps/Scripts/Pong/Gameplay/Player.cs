@@ -1,25 +1,40 @@
 ﻿using System;
 using UnityEngine;
+using Pong;
 
 namespace Pong.Gameplay {
-    public enum Side {
-        Player1, Player2
-    }
     [System.Serializable]
     internal class Player : Entity {
-        private Side side;
+        private PlayerInput playerInput;
+        public float min;
+        public float max;
 
-        internal void Init(GameManager gameManager, Side side) {
-            Init(gameManager);
-            this.side = side;
-        }
-
-        internal override void Init(GameManager gameManager) {
+        internal override void Init(GameManager gameManager, float movementSpeed) {
             this.gameManager = gameManager;
+            speed = movementSpeed;
+            min = -4f;
+            max = 4f;
         }
 
-        internal override void Update() {   
-            
+        new public void Spawn() {
+            base.Spawn();
+
+            GetInputComponent();
+            SetEvent();
+        }
+
+        private void SetEvent() {
+            playerInput.onPlayerInput += SetDirection;
+        }
+
+        private void GetInputComponent() {
+            playerInput = entityObject.GetComponent<PlayerInput>();
+        }
+
+        internal override void Update() {
+            if (GetNextPosition().y > min && GetNextPosition().y < max) {
+                Move();
+            }
         }
     }
 }

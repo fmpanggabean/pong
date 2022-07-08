@@ -13,7 +13,7 @@ namespace Pong.Gameplay {
 
 
         internal abstract void Update();
-        internal abstract void Init(GameManager gameManager);
+        internal abstract void Init(GameManager gameManager, float movementSpeed);
 
         public void Spawn() {
             entityObject = GameObject.Instantiate(entityPrefab);
@@ -21,25 +21,37 @@ namespace Pong.Gameplay {
             SetRotation(Quaternion.identity);
         }
 
-        protected void SetPosition(Vector3 position) {
+        public void SetPosition(Vector3 position) {
             entityObject.transform.position = position;
         }
 
-        protected void SetRotation(Quaternion rotation) {
+        public void SetRotation(Quaternion rotation) {
             entityObject.transform.rotation = rotation;
         }
 
-        protected void SetDirection (Vector3 dir) {
+        public void SetDirection (Vector3 dir) {
             direction = dir;
         }
-        protected void SetDirection ((float x, float y, float z) dir) {
+
+        public void SetDirection ((float x, float y, float z) dir) {
             (direction.x, direction.y, direction.z) = dir;
         }
-        protected Vector3 Move(Transform transform) {
-            return transform.position + PositionOffset();
+        protected void Move() {
+            //entityObject.transform.position += PositionOffset();
+            entityObject.transform.position = GetNextPosition();
         }
+
+        public Vector3 GetNextPosition() {
+            return entityObject.transform.position + PositionOffset();
+        }
+
         protected Vector3 PositionOffset() {
             return direction * Time.deltaTime * speed;
+        }
+
+        internal static Vector3 GetRandomDirection() {
+            Vector3 randomDirection = new Vector3(UnityEngine.Random.Range(-1f, 1f) + 1, UnityEngine.Random.Range(-.5f, .5f) + 1, 0).normalized;
+            return randomDirection;
         }
     }
 }
