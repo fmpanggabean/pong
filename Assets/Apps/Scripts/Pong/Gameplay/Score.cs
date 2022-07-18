@@ -8,7 +8,7 @@ namespace Pong.Gameplay {
         public int player1;
         public int player2;
 
-        public event Action<int, int> onScoreAdded;
+        public event Action<int, int> OnScoreAdded;
 
         public Score(GameManager gameManager) {
             this.gameManager = gameManager;
@@ -22,7 +22,7 @@ namespace Pong.Gameplay {
             } else if (side == Side.Player2) {
                 player2++;
             }
-            onScoreAdded?.Invoke(player1, player2);
+            OnScoreAdded?.Invoke(player1, player2);
         }
     }
 }
